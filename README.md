@@ -1,6 +1,11 @@
 # SCORE
 MPI-parallelized cellular automaton ensemble model for the simulation of primary recrystallization phenomena in 3D
 
+## Revival note (2026-04)
+
+This fork contains a compatibility-oriented CMake refresh for modern Linux systems.
+See `docs/REVIVAL_NOTES.md` for build assumptions, what changed, verification commands, and remaining blockers.
+
 A detailed documentation of the model and the program is available under:
 http://score.readthedocs.org/en/master/
 
