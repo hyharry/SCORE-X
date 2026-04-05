@@ -71,11 +71,28 @@ Observed results:
 
 ### Remaining risk
 
-- Runtime behavior with real example datasets is not yet smoke-tested in this revival pass.
-- A cleanup pass may eventually address warning noise (unused vars, narrowing, legacy asserts), but this is optional for functionality.
+- Runtime was smoke-tested with `example/smoke/SCORE.Smoke.uds`.
+- The first crash root cause was an unconditional access to `profiling_growthmachine.back()` even when thread profiling output was disabled.
+- A second crash in the same smoke flow came from Diehl logging assuming rendering serial-sections existed even when rendering was disabled.
+- A latent bounds/logic bug in `log_rxareaprofile2` (`++nrxg` instead of `++rxg`) and a wrong source block pointer for `RenderTheseSections` were also fixed for compatibility.
+- A cleanup pass may eventually address remaining warning noise (unused vars, narrowing, legacy asserts), but this is optional for functionality.
+
+## Runtime verification update (smoke)
+
+Commands executed:
+
+```bash
+mpiexec -n 1 ./build/revival/score 42 example/smoke/SCORE.Smoke.uds
+OMP_NUM_THREADS=4 mpiexec -n 1 ./build/revival/score 43 example/smoke/SCORE.Smoke.uds
+```
+
+Observed result:
+
+- Both commands complete successfully (exit code 0).
+- Output reaches the expected terminal message:
+  - `Simulation finished with some new insights into pRX, skal!`
 
 ## Suggested next compatibility steps
 
-1. Run a smoke test with one example input setup under `example/` to validate runtime behavior.
-2. Optionally reduce warning noise in small, focused patches.
-3. If parallel HDF5 I/O becomes a requirement later, add a parallel-HDF5 build option in `scripts/build_local_hdf5.sh` and validate against MPI-HDF5 APIs.
+1. Optionally reduce warning noise in small, focused patches.
+2. If parallel HDF5 I/O becomes a requirement later, add a parallel-HDF5 build option in `scripts/build_local_hdf5.sh` and validate against MPI-HDF5 APIs.

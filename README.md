@@ -30,7 +30,12 @@ Run:
 mpiexec -n 1 ./build/revival/score 42 example/smoke/SCORE.Smoke.uds
 ```
 
-Expected current behavior (2026-04 revival snapshot): the binary passes startup and parameter initialization, enters the simulation loop, then crashes with a segmentation fault after the first reported step. This still validates a non-trivial runtime path beyond build/link.
+Current behavior (2026-04 revival snapshot): this smoke test now runs to completion without a crash (exit code 0), reaching `Simulation finished with some new insights into pRX, skal!`.
+
+Why this is a reasonable legacy-faithful smoke input:
+- it keeps the original legacy UDS block layout and keyword style used by SCORE (`RuntimeControl`, `SimulationOutput`, `EnsembleDefinition`, etc.),
+- it is derived from the repository's own template input (`example/jmak/SCORE.Input.TemplateIron.uds`) but reduced to a small, fast domain,
+- it exercises real simulation stepping and on-the-fly logging, not just parser startup.
 
 A detailed documentation of the model and the program is available under:
 http://score.readthedocs.org/en/master/

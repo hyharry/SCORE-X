@@ -1,5 +1,5 @@
 /* 
-*	Copyright Markus Kühbach, 2014-2017
+*	Copyright Markus Kï¿½hbach, 2014-2017
 *	L. A. Barrales-Mora (quaternion library) and V. Mohles (I/O routines for reading the UDS file format)
 *	contributed to the code.
 
@@ -14,16 +14,16 @@
 *	Each of which solves for a queue of cellular automata domains. A second layer of OpenMP-thread 
 *	parallelism accelerates the executing of each individual CA domain. The method is described in:
 
-*	M. Kühbach, G. Gottstein, L. A. Barrales-Mora: A statistical ensemble cellular automaton 
+*	M. Kï¿½hbach, G. Gottstein, L. A. Barrales-Mora: A statistical ensemble cellular automaton 
 *	microstructure model for primary recrystallization, Acta Materialia, Vol 107, 2016, p366
 *	http://dx.doi.org/10.1016/j.actamat.2016.01.068
 
 *	Further details, in particular to this implementation and the concept, are detailed in:
-*	M. Kühbach: Efficient Recrystallization Microstructure Modeling by Utilizing Parallel Computation
+*	M. Kï¿½hbach: Efficient Recrystallization Microstructure Modeling by Utilizing Parallel Computation
 
 *	The authors gratefully acknowledge the financial support from the Deutsche Forschungsgemeinschaft
 *	(DFG) within the Reinhart Koselleck-Project (GO 335/44-1) and computing time grants kindly provided
-*	by RWTH Aachen University and the FZ Jülich within the scope of the JARAHPC project JARA0076.
+*	by RWTH Aachen University and the FZ Jï¿½lich within the scope of the JARAHPC project JARA0076.
 
 
 *	This file is part of SCORE.
@@ -428,7 +428,7 @@ void caHdl::log_rxareaprofile2( uint32_t threshold )
 cout << "In zz = " << zz << " about to access" << endl;
 			vector<uint32_t> & thisone = this->regions[r]->rdtd_serialsection;
 			uint32_t zroff = (zz-zmi) * nrxg;
-			for( uint32_t rxg = 0; rxg < nrxg; ++nrxg ) { //for all rxg evaluate contribution from this thread region
+			for( uint32_t rxg = 0; rxg < nrxg; ++rxg ) { //for all rxg evaluate contribution from this thread region
 				rdtd_section[rxg] += thisone.at(zroff+rxg);
 			}
 		}
@@ -564,7 +564,7 @@ void caHdl::log_OUTPUT( void )
 	//2D and 3D sections
 	if ( renderingForThisCA == true ) {
 		//##MK::old way of accounting was volume based i.e. Xcells / myCAGeometry.nboxvol_rdtdnd >= rendering_atthisX[loginfo_rendering_cnt] && loginfo_rendering_cnt < rendering_atthisX.size() ) {
-		//##MK::Diehl/Kühbach way of accounting for MMM2018 January2019 study is that the inspection area needs sufficient RX fraction
+		//##MK::Diehl/Kï¿½hbach way of accounting for MMM2018 January2019 study is that the inspection area needs sufficient RX fraction
 		double Xarea_exp = log_rxareafraction( 0.0 );
 		double Xarea_hlf = log_rxareafraction( 0.5 );
 
@@ -624,7 +624,7 @@ void caHdl::log_OUTPUT( void )
 
 	//single at the moment and data are stored not localized at the moment!
 	//##MK::ideally time-resolved growth data of individual grains is spread on the threads to reduce overhead in get_interp_cellCount, not now
-	if ( Xcells >= output_atthisX[loginfo_grainevo_cnt] && loginfo_grainevo_cnt < output_atthisX.size() ) {
+	if ( loginfo_grainevo_cnt < output_atthisX.size() && Xcells >= output_atthisX[loginfo_grainevo_cnt] ) {
 		//##MK::if no solitary unit analyses are conducted this storing might not even be necessary, disable to save memory!
 		log_grainevo();
 		log_rxareaprofile();
@@ -643,21 +643,26 @@ void caHdl::log_OUTPUT_Diehl()
 
 	//single at the moment and data are stored not localized at the moment!
 	//##MK::ideally time-resolved growth data of individual grains is spread on the threads to reduce overhead in get_interp_cellCount, not now
-	if ( Xcells >= output_atthisX[loginfo_grainevo_cnt] && loginfo_grainevo_cnt < output_atthisX.size() ) {
+	if ( loginfo_grainevo_cnt < output_atthisX.size() && Xcells >= output_atthisX[loginfo_grainevo_cnt] ) {
 		//##MK::if no solitary unit analyses are conducted this storing might not even be necessary, disable to save memory!
 		log_grainevo();
-		log_rxareaprofile2( 13 ); //accounts for all
+		if ( renderingForThisCA == true ) {
+			log_rxareaprofile2( 13 ); //uses threaded serial-section buffers
+		}
+		else {
+			log_rxareaprofile(); //fallback when no serial sections were generated
+		}
 	}
 
 	//previous the outputting of CA sections was controlled by passing volume or area rx fractions above predefined thresholds
 	//and then output was rendered for all defined sections
-	//for Diehl/Kühbach, MMM2018 Special Issue paper though we monitor first the recrystallized fraction on specific planes
+	//for Diehl/Kï¿½hbach, MMM2018 Special Issue paper though we monitor first the recrystallized fraction on specific planes
 	//and output individually when these reach predefined thresholds
 
 	//MK::NO PARALLEL RENDERING AT THE MOMENT
 	//2D and 3D sections
 	if ( renderingForThisCA == true ) {
-		//##MK::Diehl/Kühbach way of accounting for MMM2018 January2019 study is that the inspection area needs sufficient RX fraction
+		//##MK::Diehl/Kï¿½hbach way of accounting for MMM2018 January2019 study is that the inspection area needs sufficient RX fraction
 
 		uint32_t z00_logcnt = loginfo_rendering_sectionbased_cnt.at(0);
 		if ( z00_logcnt < rendering_atthisX.size() ) {
