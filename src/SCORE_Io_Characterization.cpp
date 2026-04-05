@@ -370,7 +370,7 @@ void caHdl::write_grainevolution_binary( void )
 
 	//I output time-x data
 	MPI_File_open(MPI_COMM_SELF, msfnttxx, MPI_MODE_CREATE|MPI_MODE_WRONLY, MPI_INFO_NULL, &msFileHdlTX);
-	__int64 txoffset = 0;
+	MPI_Offset txoffset = 0;
 	MPI_File_seek( msFileHdlTX, txoffset, MPI_SEEK_SET );
 	MPI_File_write_at(msFileHdlTX, txoffset, txbuffer, tx_nrows * tx_ncols, MPI_DOUBLE, &msFileStatusTX);
 	MPI_File_close(&msFileHdlTX);
@@ -378,8 +378,8 @@ void caHdl::write_grainevolution_binary( void )
 	//now push growth curves into file
 	MPI_File_open(MPI_COMM_SELF, msfnd, MPI_MODE_CREATE|MPI_MODE_WRONLY, MPI_INFO_NULL, &msFileHdlDef);
 	MPI_File_open(MPI_COMM_SELF, msfnr, MPI_MODE_CREATE|MPI_MODE_WRONLY, MPI_INFO_NULL, &msFileHdlRxg);
-	__int64 dgoffset = 0;
-	__int64 rgoffset = 0;
+	MPI_Offset dgoffset = 0;
+	MPI_Offset rgoffset = 0;
 	MPI_File_seek( msFileHdlDef, dgoffset, MPI_SEEK_SET ); //##MK::might as fp is at 0 after opening anyway be obsolete...
 	MPI_File_seek( msFileHdlRxg, rgoffset, MPI_SEEK_SET );
 
@@ -513,8 +513,8 @@ void caHdl::ompcrit_write_voxeldata_coloring_regions( void )
 	MPI_Status msFileStatus;
 	MPI_File_open(MPI_COMM_SELF, CmsFileName, MPI_MODE_CREATE|MPI_MODE_WRONLY, MPI_INFO_NULL, &msFileHdl);
 	//MK:: with 64-bit architectures, offsets calculations can be performed as longs 2^64 bit thus on petabyte files...
-	//in mpi.h MPI_Offset is defined as an __int64 which is long long, thus we can jump much more than 2^32 directly when unsigned int would be utilized
-	__int64 totalOffset = 0;
+	//in mpi.h MPI_Offset is defined as an MPI_Offset which is long long, thus we can jump much more than 2^32 directly when unsigned int would be utilized
+	MPI_Offset totalOffset = 0;
 	MPI_File_seek( msFileHdl, totalOffset, MPI_SEEK_SET );
 
 	//single automaton smaller than uint32_t range on shared memory in one process!
@@ -610,9 +610,9 @@ void caHdl::ompcrit_write_voxeldata_coloring_grainids( string postfix )
 	char* CmsFileName = new char[msFileNameLength+1];
 	strcpy(CmsFileName, msFileName.str().c_str());
 
-	//in mpi.h MPI_Offset is defined as an __int64 which is long long, thus we can jump much more than 2^32 directly when unsigned int would be utilized
+	//in mpi.h MPI_Offset is defined as an MPI_Offset which is long long, thus we can jump much more than 2^32 directly when unsigned int would be utilized
 	MPI_File_open( MPI_COMM_SELF, CmsFileName, MPI_MODE_CREATE|MPI_MODE_WRONLY, MPI_INFO_NULL, &msFileHdl );
-	__int64 totalOffset = 0;
+	MPI_Offset totalOffset = 0;
 	MPI_File_seek( msFileHdl, totalOffset, MPI_SEEK_SET );
 
 	//one temporary container of size myCAGeometry.nboxvol_rdtdnd may not be allocateable or at least significantly fragment memory
@@ -1898,7 +1898,7 @@ void caHdl::write_junction_skeleton( unsigned char mode )
 
 	//only the MASTER node writes in parallel! in write-only mode
 	MPI_File_open(MPI_COMM_SELF, CmsFileName, MPI_MODE_CREATE|MPI_MODE_WRONLY, MPI_INFO_NULL, &msFileHdl);
-	__int64 totalOffset = 0; //MK:: with 64-bit architectures, offsets calculations can be performed as longs 2^64 bit thus on petabyte files...	//in mpi.h MPI_Offset is defined as an __int64 which is long long, thus we can jump much more than 2^32 directly when unsigned int would be utilized
+	MPI_Offset totalOffset = 0; //MK:: with 64-bit architectures, offsets calculations can be performed as longs 2^64 bit thus on petabyte files...	//in mpi.h MPI_Offset is defined as an MPI_Offset which is long long, thus we can jump much more than 2^32 directly when unsigned int would be utilized
 	MPI_File_seek( msFileHdl, totalOffset, MPI_SEEK_SET );
 
 

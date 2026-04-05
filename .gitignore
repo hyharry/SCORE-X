@@ -1,3 +1,5 @@
 SCORE_PhD_20200309.zip
 
 .steps/
+.deps/
+build/

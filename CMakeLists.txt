@@ -12,6 +12,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(SCORE_ENABLE_OPENMP "Enable OpenMP" ON)
 option(SCORE_WARNINGS "Enable warning flags" ON)
+set(SCORE_HDF5_ROOT "" CACHE PATH "Path to a local HDF5 installation prefix")
+
+if(NOT SCORE_HDF5_ROOT AND EXISTS "${CMAKE_SOURCE_DIR}/.deps/hdf5")
+  set(SCORE_HDF5_ROOT "${CMAKE_SOURCE_DIR}/.deps/hdf5")
+endif()
+
+if(SCORE_HDF5_ROOT)
+  list(PREPEND CMAKE_PREFIX_PATH "${SCORE_HDF5_ROOT}")
+  set(HDF5_ROOT "${SCORE_HDF5_ROOT}")
+  message(STATUS "Using SCORE_HDF5_ROOT=${SCORE_HDF5_ROOT}")
+endif()
 
 find_package(MPI REQUIRED COMPONENTS CXX)
 find_package(HDF5 REQUIRED COMPONENTS C HL)

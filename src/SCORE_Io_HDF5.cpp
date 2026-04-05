@@ -437,8 +437,8 @@ bool caHdl::mpiio_write_voxelgrid_ipfz( string fname )
 	MPI_Status msFileStatus;
 	MPI_File_open(MPI_COMM_SELF, fname.c_str(), MPI_MODE_CREATE|MPI_MODE_WRONLY, MPI_INFO_NULL, &msFileHdl);
 	//MK:: with 64-bit architectures, offsets calculations can be performed as longs 2^64 bit thus on petabyte files...
-	//in mpi.h MPI_Offset is defined as an __int64 which is long long, thus we can jump much more than 2^32 directly when unsigned int would be utilized
-	__int64 totalOffset = 0;
+	//in mpi.h MPI_Offset is defined as an MPI_Offset which is long long, thus we can jump much more than 2^32 directly when unsigned int would be utilized
+	MPI_Offset totalOffset = 0;
 	MPI_File_seek( msFileHdl, totalOffset, MPI_SEEK_SET );
 
 	//uint32_t ndgr = mydefgpool.size();

@@ -6,6 +6,18 @@ MPI-parallelized cellular automaton ensemble model for the simulation of primary
 This fork contains a compatibility-oriented CMake refresh for modern Linux systems.
 See `docs/REVIVAL_NOTES.md` for build assumptions, what changed, verification commands, and remaining blockers.
 
+### Building without system HDF5 packages (user-space)
+
+If HDF5 development headers/libraries are missing on your host, build a local copy in this project:
+
+```bash
+./scripts/build_local_hdf5.sh
+cmake -S . -B build/revival -DSCORE_HDF5_ROOT=$PWD/.deps/hdf5
+cmake --build build/revival -j
+```
+
+`SCORE_HDF5_ROOT` is optional if `.deps/hdf5` exists; CMake will auto-detect that local prefix.
+
 A detailed documentation of the model and the program is available under:
 http://score.readthedocs.org/en/master/
 
