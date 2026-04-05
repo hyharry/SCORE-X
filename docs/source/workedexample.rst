@@ -8,7 +8,7 @@ Simulation
 
 The sequential (MPI) simulation is issued by the following command line call::
 
-   mpiexec -n 1 score SCORE.Input.TemplateIron.uds 1
+   mpiexec -n 1 score 1 SCORE.Input.TemplateIron.uds
 
 Output
 ======
