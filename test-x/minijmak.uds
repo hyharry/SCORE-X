@@ -1,0 +1,156 @@
+|| RuntimeControl		|| *(ss)		|| Parameter, Value
+"XMAX"							"1.000"		// when does the integration scheme stop at the latest
+"TIMEMAX"						"3600.0"	// simulated time upper bound
+"NMAX"							"5000"		// generous step cap for a full small run
+"PERCOLATIONANALYSIS"			"0"			// disabled
+"MAXFILLPERSTEP"				"0.1"		// integrator stability
+"RediscretizationSteps"			"500"		// lighter than the large examples, still useful kinetics output
+"InitialCacheSizeRXCells"		"0.20"		// legacy-faithful cache guess
+"ReCacheSizeRXCells"			"1.0"		// legacy-faithful recache factor
+"OnTheFlyDefragmentation"		"1"			// keep runtime behavior realistic
+"SolitaryUnitPostProcessing"	"1"			// produce rediscretized summary outputs
+"ReadEBSDMapping"				"0"			// monocrystal JMAK-like case, no external EBSD input
+"ReadEBSDStepsize"				"1.0E-06"	// ignored when EBSD off
+
+|| SimulationOutput		|| *(ss)		|| Parameter, Value
+"RenderingOfMicrostructure"		"0"			// off to keep this inexpensive
+"RenderingSectionXMIN"			"0.0"
+"RenderingSectionYMIN"			"0.0"
+"RenderingSectionZMIN"			"0.0"
+"RenderingSectionXMAX"			"1.0"
+"RenderingSectionYMAX"			"1.0"
+"RenderingSectionZMAX"			"1.0"
+"RenderingColorModel"			"1"			// legacy JMAK example used grain IDs
+"RenderingFileFormat"			"1"
+"RenderingBoundaries"			"0"
+"OutputLogBoundaries"			"0"
+"OutputRXFrontStats"			"0"
+"OutputThreadProfiling"			"0"			// keep this light
+"OutputSingleGrainStats"		"0"			// keep this light; kinetics/profiling still enough for regression
+"OutputDAMASKGeometryFile"		"0"
+"OutputArtificialSEMEBSD"		"0"
+
+|| EnsembleDefinition		|| *(ss)		|| Parameter, Value
+"CAEnsembleSize"				"1"
+"CellSize"						"1.0E+00"	// micron
+"3DCAEdgeLengthInCellsRD"		"80"		// reduced, but still a real 3D run (512k cells)
+"3DCAEdgeLengthInCellsTD"		"80"
+"3DCAEdgeLengthInCellsND"		"80"
+"MeanDefGrainSizeinRD"			"1.20E+03"	// monocrystal-like, matches the repo's JMAK idea
+"MeanDefGrainSizeinTD"			"1.20E+03"
+"MeanDefGrainSizeinND"			"1.20E+03"
+"DefStructureSynthesis"			"1"			// synthesized deformed structure
+"MeanDefSizePoissonDiameter"	"24.8"
+
+|| NucleationModeling		|| *(ss)		|| Parameter, Value
+"NucleationDensityLocalCSR"		"64"		// 80^3 scaled from the original 200^3 / 1000-nuclei JMAK example
+"CSRNucleation"					"2"			// repo JMAK-style CSR nucleation
+"ClusteredNucleation"			"0"
+"ClusteredNucleationNCluster"	"4096000"
+"ClusteredNucleationLCluster"	"100.0"
+"ClusteredNucleationScaling"	"16000.0"
+"ClusteredNucleationExtendA"	"70"
+"ClusteredNucleationExtendB"	"70"
+"ClusteredNucleationExtendC"	"70"
+"GBNucleation"					"0"
+"GBNucDensity2Number"			"1.0E-4"
+"GBNucRhoDiff2Density"			"5E-14"
+"GBNucMaximumScatter"			"5.0"
+"IncubationTimeModel"			"1"
+"IncubationTimeScatter"			"1000.0"
+
+|| MaterialProperties		|| *(ss)		|| Parameter, Value
+"ZeroKelvinShearModulusG0"		"85.0e9"
+"FirstOrderdG0dT"				"0.0e9"
+"ZeroCelsiusBurgersVector"		"2.50e-10"
+"AlloyConstantThermalExpCoeff"	"1.0"
+"FirstOrderThermalExpCoeff"		"0.0"
+"SecondOrderThermalExpCoeff"		"0.0"
+"MeltingTemperature"			"800"
+
+|| BoundaryMobilityModel	|| *(ss)		|| Parameter, Value
+"MobilityModel"					"2"			// as in the legacy JMAK example
+"LAGBm0"						"0.3"
+"LAGBHact"						"1.200"
+"HAGBm0"						"3.0"
+"HAGBHact"						"1.200"
+"GSm0"							"3.0"
+"GSHact"						"1.200"
+"RHModelHAGBm0"				"300.0"
+"RHModelHAGBHact"			"2.45"
+"RHModelLAGBHAGBCut"			"0.9"
+"RHModelLAGBHAGBTrans"			"5.0"
+"RHModelLAGBHAGBExponent"		"9.0"
+
+|| RecoveryParameter		|| *(ss)		|| Parameter, Value
+"RecoveryConsider"				"0"
+"RecoveryVacancyDiffGeometry"	"1.0"
+"RecoveryVacancyDiffPreexp"		"1.0"
+"RecoveryVacancyDiffHact"		"2.9"
+"RecoverySoluteDiffPreexp"		"1.0"
+"RecoverySoluteDiffHact"		"1.6"
+"RecoverySoluteLsPropFactor"	"1.0"
+"RecoverySoluteConcentration"	"1.0"
+"RecoveryParameterAlpha3"		"1.0"
+"RecoveryParameterKappa2"		"0.1"
+"RecoveryParameterC3"			"1.0"
+"RecoveryParameterC4"			"1.0"
+"RecoveryParameterC5"			"0.65"
+
+|| DragParameter		|| *(ss)		|| Parameter, Value
+"ZenerConsider"					"0"
+"ZenerAlpha"					"1.5"
+"ZenerGamma"					"0.324"
+
+|| EvoMicrochemistry		|| *(ff)			|| time, fr
+0.0								0.00E+0
+360000.0						0.00E+0
+
+|| IdealComponents			|| *(sffff)		|| Name, Bunge1, Bunge2, Bunge3, scatter
+"Gamma111-110"		60.0		55.0		45.0		10.0
+"NucAlpha"			0.0		30.0		45.0		2.0
+
+|| AnnealingSchedule		|| *(ff)			|| time, temperature
+0.0		500
+3600.0	500
+
+|| AnnealingScheduleOld		|| *(ff)			|| time, temperature
+0		500
+3600	500
+
+|| DeformedGrainsPool		|| *(ffff)		|| Bunge e1, Bunge e2, Bunge e3, rho0
+60.0		55.0		45.0		1.0E+15
+
+|| RXGrainsPool				|| *(ffff)		|| Bunge e1, Bunge e2, Bunge e3, tincub
+0.0			30.0		45.0		0.0
+
+|| RenderMicrostructure	|| *(sf)		|| Local recrystallized fraction, local value
+"X"	0.25
+"X"	0.50
+"X"	0.75
+"X"	1.00
+
+|| RenderOnlyTheseSolitaryUnits || *(i)
+0
+
+|| RenderTheseSections || *(sf)
+"Z"		0.00
+"Z"		0.50
+"Z"		1.00
+
+|| HeuristicRXFrontListDefragmentation	|| *(sf)
+"X"		0.60
+"X"		0.70
+"X"		0.80
+"X"		0.90
+"X"		0.99
+
+|| SingleGrainVolOverTime	|| *(sf)
+"X"		0.00
+"X"		0.10
+"X"		0.25
+"X"		0.50
+"X"		0.75
+"X"		0.90
+"X"		0.99
+"X"		1.00
