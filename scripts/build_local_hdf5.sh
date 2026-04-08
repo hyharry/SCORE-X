@@ -11,7 +11,17 @@ BUILD_DIR="${DEPS_DIR}/build/hdf5"
 VERSION="${1:-1.14.5}"
 PREFIX="${DEPS_DIR}/hdf5"
 TARBALL="hdf5-${VERSION}.tar.gz"
-URL="https://support.hdfgroup.org/releases/hdf5/v1_14/v1_14_5/downloads/${TARBALL}"
+MAJOR_MINOR="$(cut -d. -f1,2 <<<"${VERSION}")"
+MAJOR_MINOR_UNDERSCORE="${MAJOR_MINOR//./_}"
+VERSION_UNDERSCORE="${VERSION//./_}"
+URL="https://support.hdfgroup.org/releases/hdf5/v${MAJOR_MINOR_UNDERSCORE}/v${VERSION_UNDERSCORE}/downloads/${TARBALL}"
+
+for cmd in curl cmake tar; do
+  if ! command -v "${cmd}" >/dev/null 2>&1; then
+    echo "[hdf5] Missing required command: ${cmd}" >&2
+    exit 1
+  fi
+done
 
 mkdir -p "${SRC_DIR}" "${BUILD_DIR}"
 

@@ -11,7 +11,8 @@ See `docs/REVIVAL_NOTES.md` for build assumptions, what changed, verification co
 If HDF5 development headers/libraries are missing on your host, build a local copy in this project:
 
 ```bash
-./scripts/build_local_hdf5.sh
+./scripts/build_local_hdf5.sh            # default: 1.14.5
+# ./scripts/build_local_hdf5.sh 1.14.4   # optional: pick another 1.14.x version
 cmake -S . -B build/revival -DSCORE_HDF5_ROOT=$PWD/.deps/hdf5
 cmake --build build/revival -j
 ```
