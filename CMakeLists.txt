@@ -12,6 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(SCORE_ENABLE_OPENMP "Enable OpenMP" ON)
 option(SCORE_WARNINGS "Enable warning flags" ON)
+option(SCORE_ENABLE_SMOKE_TEST "Register a minimal MPI smoke test with CTest" OFF)
 set(SCORE_HDF5_ROOT "" CACHE PATH "Path to a local HDF5 installation prefix")
 
 if(NOT SCORE_HDF5_ROOT AND EXISTS "${CMAKE_SOURCE_DIR}/.deps/hdf5")
@@ -85,6 +86,25 @@ if(SCORE_WARNINGS)
     -Wno-sign-compare
     -Wno-reorder
   )
+endif()
+
+if(SCORE_ENABLE_SMOKE_TEST)
+  include(CTest)
+  if(BUILD_TESTING)
+    set(SCORE_SMOKE_INPUT "${CMAKE_SOURCE_DIR}/example/smoke/SCORE.Smoke.uds")
+    if(EXISTS "${SCORE_SMOKE_INPUT}")
+      if(MPIEXEC_EXECUTABLE)
+        add_test(
+          NAME score_smoke_mpi1
+          COMMAND "${MPIEXEC_EXECUTABLE}" -n 1 $<TARGET_FILE:score> 4242 "${SCORE_SMOKE_INPUT}"
+        )
+      else()
+        message(WARNING "SCORE_ENABLE_SMOKE_TEST=ON but MPIEXEC_EXECUTABLE is unavailable; smoke test not registered")
+      endif()
+    else()
+      message(WARNING "SCORE_ENABLE_SMOKE_TEST=ON but ${SCORE_SMOKE_INPUT} does not exist; smoke test not registered")
+    endif()
+  endif()
 endif()
 
 message(STATUS "MPI CXX compiler: ${MPI_CXX_COMPILER}")

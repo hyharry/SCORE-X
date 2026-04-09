@@ -23,7 +23,14 @@ for cmd in curl cmake tar; do
   fi
 done
 
-mkdir -p "${SRC_DIR}" "${BUILD_DIR}"
+mkdir -p "${SRC_DIR}"
+
+# Reconfigure cleanly when a previous build directory was created for another version.
+if [[ -f "${BUILD_DIR}/CMakeCache.txt" ]] && ! grep -q "hdf5-${VERSION}" "${BUILD_DIR}/CMakeCache.txt"; then
+  echo "[hdf5] Detected stale build directory, removing ${BUILD_DIR}"
+  rm -rf "${BUILD_DIR}"
+fi
+mkdir -p "${BUILD_DIR}"
 
 if [[ ! -f "${SRC_DIR}/${TARBALL}" ]]; then
   echo "[hdf5] Downloading ${URL}"
@@ -47,8 +54,16 @@ cmake -S "${SRC_DIR}/hdf5-${VERSION}" -B "${BUILD_DIR}" \
   -DHDF5_ENABLE_PARALLEL=OFF \
   -DHDF5_BUILD_HL_LIB=ON
 
-echo "[hdf5] Building and installing to ${PREFIX}"
-cmake --build "${BUILD_DIR}" -j"$(nproc)"
+if command -v nproc >/dev/null 2>&1; then
+  JOBS="$(nproc)"
+elif command -v getconf >/dev/null 2>&1; then
+  JOBS="$(getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)"
+else
+  JOBS=1
+fi
+
+echo "[hdf5] Building and installing to ${PREFIX} (jobs=${JOBS})"
+cmake --build "${BUILD_DIR}" -j"${JOBS}"
 cmake --install "${BUILD_DIR}"
 
 echo "[hdf5] Done. Configure SCORE with:"

@@ -17,6 +17,13 @@ cmake -S . -B build/revival -DSCORE_HDF5_ROOT=$PWD/.deps/hdf5
 cmake --build build/revival -j
 ```
 
+Optional: register a CTest smoke test during configure:
+
+```bash
+cmake -S . -B build/revival -DSCORE_HDF5_ROOT=$PWD/.deps/hdf5 -DSCORE_ENABLE_SMOKE_TEST=ON
+ctest --test-dir build/revival --output-on-failure
+```
+
 `SCORE_HDF5_ROOT` is optional if `.deps/hdf5` exists; CMake will auto-detect that local prefix.
 
 ### Minimal runtime smoke test (current revival status)
